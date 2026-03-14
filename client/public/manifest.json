@@ -1,0 +1,45 @@
+{
+  "short_name": "Viebo",
+  "name": "Viebo - Event Based Dating",
+  "description": "Find your perfect match at events that matter to you",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#ec4899",
+  "background_color": "#0f172a",
+  "categories": ["social", "lifestyle"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Discover Events",
+      "short_name": "Discover",
+      "description": "Find new events near you",
+      "url": "/discover",
+      "icons": [{ "src": "logo.svg", "sizes": "any" }]
+    },
+    {
+      "name": "My Matches",
+      "short_name": "Matches",
+      "description": "View your matches",
+      "url": "/matches",
+      "icons": [{ "src": "logo.svg", "sizes": "any" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
