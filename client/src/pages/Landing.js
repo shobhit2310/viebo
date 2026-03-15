@@ -8,85 +8,387 @@ const Landing = () => {
   const featuresSectionRef = useRef(null);
   const heroVisualRef = useRef(null);
   const statsSectionRef = useRef(null);
-      {/* Hero Section */}
-      <section className="hero-3d centered">
-        <div className="hero-content centered">
-          {/* Viebo Logo with Heart as dot of i */}
-          <div className="viebo-logo-container">
-            <div className="viebo-text">
-              <span className="letter hero-letter letter-v" style={{ '--letter-index': 0 }}>v</span>
-              <span className="letter hero-letter letter-i" style={{ '--letter-index': 1 }}>
-                <span className="i-heart-dot">
-                  <svg viewBox="0 0 32 32" className="i-heart-svg">
-                    <defs>
-                      <linearGradient id="iHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ff6b9d" />
-                        <stop offset="50%" stopColor="#c44cff" />
-                        <stop offset="100%" stopColor="#8b5cf6" />
-                      </linearGradient>
-                    </defs>
-                    <path 
-                      d="M16 28s-12-7.5-12-15c0-4.5 3.5-8 8-8 2.5 0 4.5 1 6 3 1.5-2 3.5-3 6-3 4.5 0 8 3.5 8 8 0 7.5-12 15-12 15z"
-                      fill="url(#iHeartGradient)"
-                    />
-                  </svg>
+  const [isFeatureDeckOpen, setIsFeatureDeckOpen] = useState(false);
+  const [isHeroReady, setIsHeroReady] = useState(false);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
+  const [cursorSparks, setCursorSparks] = useState([]);
+  const [glowMagnet, setGlowMagnet] = useState({ x: 0, y: 0 });
+  const [glassMagnet, setGlassMagnet] = useState({ x: 0, y: 0 });
+  
+  // Morphing tagline words
+  const morphWords = ['Perfect Match', 'True Love', 'Soulmate', 'Connection'];
+  const [morphIndex, setMorphIndex] = useState(0);
+  
+  // Typewriter effect
+  const [displayedText, setDisplayedText] = useState('');
+  const fullText = "Connect with people at the same parties, festivals, and events. Send anonymous crushes, get matched, and start your love story.";
+  
+  // Stats counter
+  const [statsVisible, setStatsVisible] = useState(false);
+
+  // Testimonials
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const testimonials = [
+    { name: "Sarah & Mike", quote: "We met at a music festival through Viebo. Now we're engaged! 💍", avatar: "👩‍❤️‍👨" },
+    { name: "Priya", quote: "Finally an app where I actually meet people I vibe with in real life!", avatar: "🧕" },
+    { name: "James", quote: "Matched with my girlfriend at a house party. Best app ever!", avatar: "👨" },
+    { name: "Emma & Liam", quote: "From strangers at a concert to soulmates. Thank you Viebo! 💕", avatar: "👫" }
+  ];
+  
+  // 3D tilt state for cards
+  const [cardTilts, setCardTilts] = useState({});
+  
+  // Loading screen
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Scroll progress indicator
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let particles = [];
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Create particles
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(particle => {
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 245, 255, ${particle.opacity})`;
+        ctx.fill();
+      });
+
+      // Draw connections
+      particles.forEach((particle, i) => {
+        particles.slice(i + 1).forEach(otherParticle => {
+          const dx = particle.x - otherParticle.x;
+          const dy = particle.y - otherParticle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 150) {
+            ctx.beginPath();
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(otherParticle.x, otherParticle.y);
+            ctx.strokeStyle = `rgba(255, 0, 110, ${0.15 * (1 - distance / 150)})`;
+            ctx.stroke();
+          }
+        });
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  useEffect(() => {
+    const sectionEl = featuresSectionRef.current;
+    if (!sectionEl) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsFeatureDeckOpen(true);
+        } else {
+          setIsFeatureDeckOpen(false);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(sectionEl);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsHeroReady(true), 120);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => setParallaxOffset(window.scrollY || 0);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Morphing tagline effect
+  useEffect(() => {
+    const morphInterval = setInterval(() => {
+      setMorphIndex((prev) => (prev + 1) % morphWords.length);
+    }, 3000);
+    return () => clearInterval(morphInterval);
+  }, [morphWords.length]);
+
+  // Typewriter effect
+  useEffect(() => {
+    if (!isHeroReady) return;
+    let index = 0;
+    const typeInterval = setInterval(() => {
+      if (index <= fullText.length) {
+        setDisplayedText(fullText.slice(0, index));
+        index++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 25);
+    return () => clearInterval(typeInterval);
+  }, [isHeroReady]);
+
+  // Stats section observer
+  useEffect(() => {
+    const statsEl = statsSectionRef.current;
+    if (!statsEl) return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !statsVisible) {
+          setStatsVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    
+    observer.observe(statsEl);
+    return () => observer.disconnect();
+  }, [statsVisible]);
+
+  // Testimonials auto-rotate
+  useEffect(() => {
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(testimonialInterval);
+  }, [testimonials.length]);
+
+  // Loading screen effect
+  useEffect(() => {
+    const loadTimer = setTimeout(() => setIsLoading(false), 2500);
+    return () => clearTimeout(loadTimer);
+  }, []);
+
+  // Scroll progress indicator
+  useEffect(() => {
+    const handleScrollProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setScrollProgress(progress);
+    };
+    
+    window.addEventListener('scroll', handleScrollProgress, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollProgress);
+  }, []);
+
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('[data-reveal]');
+    if (!revealItems.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
+  const handleMagneticMove = (event, setter) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 12;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 12;
+    setter({ x, y });
+  };
+
+  const resetMagnetic = (setter) => setter({ x: 0, y: 0 });
+
+  const handleHeroMouseMove = (event) => {
+    const bounds = heroVisualRef.current?.getBoundingClientRect();
+    if (!bounds || Math.random() > 0.22) return;
+
+    const spark = {
+      id: `${Date.now()}-${Math.random()}`,
+      x: event.clientX - bounds.left,
+      y: event.clientY - bounds.top
+    };
+
+    setCursorSparks((prev) => [...prev.slice(-18), spark]);
+    setTimeout(() => {
+      setCursorSparks((prev) => prev.filter((item) => item.id !== spark.id));
+    }, 700);
+  };
+
+  // 3D tilt for cards
+  const handleCardTilt = (event, cardId) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    const y = (event.clientY - rect.top) / rect.height;
+    const tiltX = (y - 0.5) * 20;
+    const tiltY = (x - 0.5) * -20;
+    setCardTilts(prev => ({ ...prev, [cardId]: { x: tiltX, y: tiltY } }));
+  };
+
+  const resetCardTilt = (cardId) => {
+    setCardTilts(prev => ({ ...prev, [cardId]: { x: 0, y: 0 } }));
+  };
+
+  return (
+    <>
+      {/* Loading Screen */}
+      <div className={`loading-screen ${isLoading ? 'active' : 'hidden'}`}>
+        <div className="loading-content">
+          <div className="loading-logo">
+            <span className="loading-letter">V</span>
+            <span className="loading-heart">💕</span>
+            <span className="loading-letter">i</span>
+            <span className="loading-letter">e</span>
+            <span className="loading-letter">b</span>
+            <span className="loading-letter">o</span>
+          </div>
+          <div className="loading-bar">
+            <div className="loading-progress"></div>
+          </div>
+          <p className="loading-text">Finding your perfect match...</p>
+        </div>
+      </div>
+
+      {/* Scroll Progress Indicator */}
+      <div className="scroll-progress-container">
+        <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
+      </div>
+
+      <div 
+        className={`landing-page ${isHeroReady ? 'hero-loaded' : 'hero-intro'}`} 
+        style={{ minHeight: '100vh', paddingTop: '80px' }}
+      >
+        <LandingNavbar />
+        {/* Animated Canvas Background */}
+        <canvas
+          ref={canvasRef}
+          className="particle-canvas"
+          style={{ transform: `translate3d(0, ${parallaxOffset * 0.22}px, 0)` }}
+        />
+
+        {/* Ambient Blobs */}
+        <div className="ambient-blobs" style={{ transform: `translate3d(0, ${parallaxOffset * 0.18}px, 0)` }}>
+          <div className="blob blob-cyan"></div>
+          <div className="blob blob-pink"></div>
+          <div className="blob blob-violet"></div>
+        </div>
+
+        {/* Hero Section */}
+        <section className="hero-3d centered">
+          <div className="hero-content centered">
+            {/* Viebo Logo with Heart as dot of i */}
+            <div className="viebo-logo-container">
+              <div className="viebo-text">
+                <span className="letter hero-letter letter-v" style={{ '--letter-index': 0 }}>v</span>
+                <span className="letter hero-letter letter-i" style={{ '--letter-index': 1 }}>
+                  <span className="i-heart-dot">
+                    <svg viewBox="0 0 32 32" className="i-heart-svg">
+                      <defs>
+                        <linearGradient id="iHeartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor="#ff6b9d" />
+                          <stop offset="50%" stopColor="#c44cff" />
+                          <stop offset="100%" stopColor="#8b5cf6" />
+                        </linearGradient>
+                      </defs>
+                      <path 
+                        d="M16 28s-12-7.5-12-15c0-4.5 3.5-8 8-8 2.5 0 4.5 1 6 3 1.5-2 3.5-3 6-3 4.5 0 8 3.5 8 8 0 7.5-12 15-12 15z"
+                        fill="url(#iHeartGradient)"
+                      />
+                    </svg>
+                  </span>
+                  <span className="i-stem">ı</span>
                 </span>
-                <span className="i-stem">ı</span>
+                <span className="letter hero-letter letter-e" style={{ '--letter-index': 2 }}>e</span>
+                <span className="letter hero-letter letter-b" style={{ '--letter-index': 3 }}>b</span>
+                <span className="letter hero-letter letter-o" style={{ '--letter-index': 4 }}>o</span>
+              </div>
+            </div>
+
+            <h1 className="hero-title-3d" data-reveal style={{ '--reveal-delay': '40ms' }}>
+              <span className="title-line">Find Your</span>
+              <span className="title-highlight">
+                <span className="gradient-text morph-text" key={morphIndex}>
+                  {morphWords[morphIndex]}
+                </span>
+                <Heart className="heart-icon" size={48} />
               </span>
-              <span className="letter hero-letter letter-e" style={{ '--letter-index': 2 }}>e</span>
-              <span className="letter hero-letter letter-b" style={{ '--letter-index': 3 }}>b</span>
-              <span className="letter hero-letter letter-o" style={{ '--letter-index': 4 }}>o</span>
+              <span className="title-line glitch-text" data-text="At Real Events">At Real Events</span>
+            </h1>
+            
+            <p className="hero-description typewriter" data-reveal style={{ '--reveal-delay': '120ms' }}>
+              {displayedText}
+              <span className="typewriter-cursor">|</span>
+            </p>
+
+            <div className="hero-buttons" data-reveal style={{ '--reveal-delay': '200ms' }}>
+              <Link
+                to="/register"
+                className="btn-glow magnetic-btn"
+                onMouseMove={(event) => handleMagneticMove(event, setGlowMagnet)}
+                onMouseLeave={() => resetMagnetic(setGlowMagnet)}
+                style={{ 
+                  '--mx': `${glowMagnet.x}px`, 
+                  '--my': `${glowMagnet.y}px`
+                }}
+              >
+                <span>Start Your Journey</span>
+                <ArrowRight size={20} />
+              </Link>
+              <Link
+                to="/login"
+                className="btn-glass magnetic-btn"
+                onMouseMove={(event) => handleMagneticMove(event, setGlowMagnet)}
+                onMouseLeave={() => resetMagnetic(setGlowMagnet)}
+                style={{ '--mx': `${glowMagnet.x}px`, '--my': `${glowMagnet.y}px` }}
+              >
+                <span>Sign In</span>
+              </Link>
             </div>
           </div>
-
-          <h1 className="hero-title-3d" data-reveal style={{ '--reveal-delay': '40ms' }}>
-            <span className="title-line">Find Your</span>
-            <span className="title-highlight">
-              <span className="gradient-text morph-text" key={morphIndex}>
-                {morphWords[morphIndex]}
-              </span>
-              <Heart className="heart-icon" size={48} />
-            </span>
-            <span className="title-line glitch-text" data-text="At Real Events">At Real Events</span>
-          </h1>
-          
-          <p className="hero-description typewriter" data-reveal style={{ '--reveal-delay': '120ms' }}>
-            {displayedText}
-            <span className="typewriter-cursor">|</span>
-          </p>
-
-          <div className="hero-buttons" data-reveal style={{ '--reveal-delay': '200ms' }}>
-            <Link
-              to="/register"
-              className="btn-glow magnetic-btn"
-              onMouseMove={(event) => handleMagneticMove(event, setGlowMagnet)}
-              onMouseLeave={() => resetMagnetic(setGlowMagnet)}
-              style={{ 
-                '--mx': `${glowMagnet.x}px`, 
-                '--my': `${glowMagnet.y}px`
-              }}
-            >
-              <span>Start Your Journey</span>
-              <ArrowRight size={20} />
-            </Link>
-            <Link
-              to="/login"
-              className="btn-glass magnetic-btn"
-              onMouseMove={(event) => handleMagneticMove(event, setGlowMagnet)}
-              onMouseLeave={() => resetMagnetic(setGlowMagnet)}
-              style={{ '--mx': `${glowMagnet.x}px`, '--my': `${glowMagnet.y}px` }}
-            >
-              <span>Sign In</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-assName="orbit orbit-3">
-              <div className="orbit-dot">💖</div>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
       {/* Features Section */}
       <section className="features-section" ref={featuresSectionRef}>
@@ -3688,26 +3990,7 @@ assName="orbit orbit-3">
             justify-content: center;
           }
 
-          .hero-visual {
-            margin-top: 40px;
-          }
 
-          .slideshow-container {
-            width: 320px;
-            height: 480px;
-          }
-
-          .features-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-
-          /* Adjust deck positions for tablet */
-          .features-grid:not(.deck-open) .deck-card:nth-child(1) { transform: translateY(50px) translateX(40px) rotateX(45deg) rotateZ(-6deg) scale(0.7); }
-          .features-grid:not(.deck-open) .deck-card:nth-child(2) { transform: translateY(60px) translateX(20px) rotateX(43deg) rotateZ(-3deg) scale(0.72); }
-          .features-grid:not(.deck-open) .deck-card:nth-child(3) { transform: translateY(70px) translateX(0px) rotateX(41deg) rotateZ(0deg) scale(0.74); }
-          .features-grid:not(.deck-open) .deck-card:nth-child(4) { transform: translateY(80px) translateX(-20px) rotateX(39deg) rotateZ(3deg) scale(0.76); }
-          .features-grid:not(.deck-open) .deck-card:nth-child(5) { transform: translateY(90px) translateX(-40px) rotateX(37deg) rotateZ(6deg) scale(0.78); }
-          .features-grid:not(.deck-open) .deck-card:nth-child(6) { transform: translateY(100px) translateX(-60px) rotateX(35deg) rotateZ(9deg) scale(0.8); }
 
           .steps-container {
             flex-direction: column;
