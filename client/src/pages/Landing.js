@@ -49,11 +49,23 @@ const Landing = () => {
       >
         <LandingNavbar />
         
-        {/* Flowing Water Waves Background */}
-        <div className="flowing-waves">
-          <div className="wave wave-1"></div>
-          <div className="wave wave-2"></div>
-          <div className="wave wave-3"></div>
+        {/* Fluid Ripple Background */}
+        <div className="fluid-bg-container">
+          <div className="liquid-blob blob-1"></div>
+          <div className="liquid-blob blob-2"></div>
+          <div className="liquid-blob blob-3"></div>
+          <div className="liquid-blob blob-4"></div>
+          <div className="noise-overlay"></div>
+          
+          {/* SVG Filter for Liquid Distortion */}
+          <svg className="liquid-filter-svg">
+            <filter id="liquid">
+              <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2">
+                <animate attributeName="baseFrequency" dur="30s" values="0.01;0.02;0.01" repeatCount="indefinite" />
+              </feTurbulence>
+              <feDisplacementMap in="SourceGraphic" scale="40" />
+            </filter>
+          </svg>
         </div>
 
         <div className="hero-3d centered">
@@ -105,51 +117,86 @@ const Landing = () => {
       </div>
 
       <style jsx>{`
-        .landing-page {
-          min-height: 100vh;
-          background: #fffafa;
-          color: #1e293b;
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          overflow: hidden;
-        }
-
-        /* Flowing Waves */
-        .flowing-waves {
+        .fluid-bg-container {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
           z-index: 1;
-          pointer-events: none;
+          background: #fffafa;
+          overflow: hidden;
+          filter: url(#liquid);
         }
 
-        .wave {
+        .liquid-blob {
           position: absolute;
-          width: 250%;
-          height: 800px;
-          top: -200px;
-          left: -50%;
+          border-radius: 50%;
           filter: blur(80px);
-          opacity: 0.25;
-          animation: flow 25s ease-in-out infinite;
+          opacity: 0.5;
+          mix-blend-mode: multiply;
+          animation: move-blobs 35s ease-in-out infinite;
         }
 
-        .wave-1 {
-          background: radial-gradient(circle at 20% 30%, #ffcbe4, transparent);
+        .blob-1 {
+          width: 600px;
+          height: 600px;
+          background: #ffcbe4;
+          top: -100px;
+          left: -100px;
+          animation-duration: 40s;
+        }
+
+        .blob-2 {
+          width: 500px;
+          height: 500px;
+          background: #e0e7ff;
+          top: 40%;
+          right: -100px;
+          animation-delay: -5s;
+          animation-duration: 35s;
+        }
+
+        .blob-3 {
+          width: 550px;
+          height: 550px;
+          background: #ffedd5;
+          bottom: -100px;
+          left: 20%;
+          animation-delay: -10s;
+          animation-duration: 45s;
+        }
+
+        .blob-4 {
+          width: 450px;
+          height: 450px;
+          background: #fdf2f8;
+          top: 10%;
+          left: 40%;
+          animation-delay: -15s;
           animation-duration: 30s;
         }
 
-        .wave-2 {
-          background: radial-gradient(circle at 40% 50%, #e0e7ff, transparent);
-          animation-duration: 40s;
-          animation-delay: -5s;
+        .noise-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          opacity: 0.03;
+          pointer-events: none;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
-        .wave-3 {
-          background: radial-gradient(circle at 60% 30%, #ecfeff, transparent);
-          animation-duration: 35s;
-          animation-delay: -10s;
+        .liquid-filter-svg {
+          position: absolute;
+          width: 0;
+          height: 0;
+          pointer-events: none;
+        }
+
+        @keyframes move-blobs {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(100px, 50px) scale(1.1); }
+          66% { transform: translate(-50px, 100px) scale(0.9); }
         }
 
         /* Hero Section */
