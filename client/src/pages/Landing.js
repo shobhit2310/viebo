@@ -43,73 +43,8 @@ const Landing = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let particles = [];
-
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Create particles
-    for (let i = 0; i < 50; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        opacity: Math.random() * 0.5 + 0.2
-      });
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      particles.forEach(particle => {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0, 245, 255, ${particle.opacity})`;
-        ctx.fill();
-      });
-
-      // Draw connections
-      particles.forEach((particle, i) => {
-        particles.slice(i + 1).forEach(otherParticle => {
-          const dx = particle.x - otherParticle.x;
-          const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 150) {
-            ctx.beginPath();
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(255, 0, 110, ${0.15 * (1 - distance / 150)})`;
-            ctx.stroke();
-          }
-        });
-      });
-
-      animationFrameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      cancelAnimationFrame(animationFrameId);
-    };
+    // Canvas and particles logic removed for redesign.
+    // Using CSS waves instead.
   }, []);
 
   useEffect(() => {
@@ -258,46 +193,72 @@ const Landing = () => {
 
   return (
     <>
-      {/* Loading Screen */}
-      <div className={`loading-screen ${isLoading ? 'active' : 'hidden'}`}>
-        <div className="loading-content">
-          <div className="loading-logo">
-            <span className="loading-letter">V</span>
-            <span className="loading-heart">💕</span>
-            <span className="loading-letter">i</span>
-            <span className="loading-letter">e</span>
-            <span className="loading-letter">b</span>
-            <span className="loading-letter">o</span>
-          </div>
-          <div className="loading-bar">
-            <div className="loading-progress"></div>
-          </div>
-          <p className="loading-text">Finding your perfect match...</p>
-        </div>
-      </div>
-
+  return (
+    <>
       {/* Scroll Progress Indicator */}
       <div className="scroll-progress-container">
-        <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
+        <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%`, background: '#be185d' }} />
       </div>
 
       <div 
         className={`landing-page ${isHeroReady ? 'hero-loaded' : 'hero-intro'}`} 
-        style={{ minHeight: '100vh', paddingTop: '80px' }}
+        style={{ minHeight: '100vh', paddingTop: '80px', position: 'relative', overflow: 'hidden' }}
       >
         <LandingNavbar />
-        {/* Animated Canvas Background */}
-        <canvas
-          ref={canvasRef}
-          className="particle-canvas"
-          style={{ transform: `translate3d(0, ${parallaxOffset * 0.22}px, 0)` }}
-        />
+        
+        {/* Flowing Water Waves Background */}
+        <div className="flowing-waves">
+          <div className="wave wave-1"></div>
+          <div className="wave wave-2"></div>
+          <div className="wave wave-3"></div>
+        </div>
 
-        {/* Ambient Blobs */}
-        <div className="ambient-blobs" style={{ transform: `translate3d(0, ${parallaxOffset * 0.18}px, 0)` }}>
-          <div className="blob blob-cyan"></div>
-          <div className="blob blob-pink"></div>
-          <div className="blob blob-violet"></div>
+        <div className="hero-3d centered">
+          <div className="hero-content">
+            <div className="viebo-logo-container">
+              <div className="viebo-text-minimal">
+                <span className="serif-i">v</span>
+                <span className="heart-dot"></span>
+                <span className="serif-rest">iebo</span>
+              </div>
+              <div className="accent-divider">
+                <div className="dot"></div>
+              </div>
+            </div>
+
+            <h1 className="hero-title-serif">
+              Find Your <br />
+              <span className="morph-wrapper">
+                <span className="morph-text accent-pink" key={morphIndex}>
+                  {morphWords[morphIndex]}
+                </span>
+                <span className="heart-inline">❤️</span>
+              </span> <br />
+              At Real Events
+            </h1>
+
+            <p className="hero-description-light">
+              Connect with people at the same parties, festivals, and events.<br />
+              Send anonymous crushes, get matched, and start your love story.
+            </p>
+
+            <div className="hero-buttons">
+              <Link to="/register" className="btn-primary-polished">
+                Find Your Match
+              </Link>
+              <button className="btn-secondary-outline">
+                See How It Works
+              </button>
+            </div>
+
+            <div className="hero-features-minimal">
+              <span>• Anonymous crushes</span>
+              <span>• Real events only</span>
+              <span>• Mutual match reveal</span>
+              <span>• Always private</span>
+            </div>
+          </div>
+        </div>
         </div>
 
         {/* Hero Section */}
@@ -661,540 +622,232 @@ const Landing = () => {
       <style jsx>{`
         .landing-page {
           min-height: 100vh;
-          background: linear-gradient(135deg, #000004 0%, #02010a 25%, #04020e 50%, #02010a 75%, #000004 100%);
-          overflow: visible;
-          position: relative;
-          touch-action: manipulation;
-          -webkit-overflow-scrolling: touch;
+          background: #fffafa;
+          color: #1e293b;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          overflow: hidden;
         }
 
-        .landing-page::before {
-          content: '';
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          z-index: 2;
-          background: radial-gradient(circle at 20% 30%, rgba(0, 245, 255, 0.12), transparent 45%),
-                      radial-gradient(circle at 80% 65%, rgba(255, 0, 110, 0.1), transparent 50%);
-          opacity: 0;
-          transform: translateX(-8%);
-          transition: opacity 1s ease, transform 1.2s ease;
-        }
-
-        .landing-page.hero-loaded::before {
-          opacity: 1;
-          transform: translateX(0);
-        }
-
-        .particle-canvas {
+        /* Flowing Waves */
+        .flowing-waves {
           position: fixed;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          pointer-events: none;
           z-index: 1;
-        }
-
-        .floating-elements {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
           pointer-events: none;
-          z-index: 1;
-          overflow: hidden;
         }
 
-        .floating-heart {
+        .wave {
           position: absolute;
-          animation: floatUp linear infinite;
-          bottom: -50px;
-        }
-
-        .ambient-blobs {
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          z-index: 1;
-          overflow: hidden;
-        }
-
-        .blob {
-          position: absolute;
-          width: 320px;
-          height: 320px;
-          border-radius: 50%;
-          filter: blur(90px);
-          opacity: 0.15;
-          animation: blobDrift 16s ease-in-out infinite;
-        }
-
-        .blob-cyan {
-          top: 12%;
-          left: 8%;
-          background: rgba(0, 245, 255, 0.7);
-        }
-
-        .blob-pink {
-          top: 42%;
-          right: 10%;
-          background: rgba(255, 0, 110, 0.7);
-          animation-delay: 2.4s;
-        }
-
-        .blob-violet {
-          bottom: 6%;
-          left: 35%;
-          background: rgba(139, 92, 246, 0.7);
-          animation-delay: 4.8s;
-        }
-
-        @keyframes blobDrift {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(20px, -30px) scale(1.08); }
-        }
-
-        /* Cursor Glow Trail */
-        .cursor-glow-trail {
-          position: fixed;
-          width: 400px;
-          height: 400px;
-          pointer-events: none;
-          z-index: 9999;
-          transform: translate(-50%, -50%);
-          background: radial-gradient(circle, rgba(0, 245, 255, 0.15) 0%, rgba(255, 0, 110, 0.08) 30%, transparent 70%);
-          border-radius: 50%;
-          filter: blur(40px);
-          transition: opacity 0.3s ease;
-          mix-blend-mode: screen;
-        }
-
-        /* Noise/Grain Overlay */
-        .noise-overlay {
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          z-index: 9998;
-          opacity: 0.03;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-        }
-
-        /* Aurora Borealis Effect */
-        .aurora-container {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          pointer-events: none;
-          z-index: 0;
-          overflow: hidden;
-        }
-
-        .aurora {
-          position: absolute;
-          width: 200%;
-          height: 200px;
-          filter: blur(60px);
-          opacity: 0.3;
-          animation: auroraWave 15s ease-in-out infinite;
-        }
-
-        .aurora-1 {
-          top: 5%;
+          width: 250%;
+          height: 800px;
+          top: -200px;
           left: -50%;
-          background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.5), rgba(139, 92, 246, 0.5), transparent);
-          animation-delay: 0s;
+          filter: blur(80px);
+          opacity: 0.25;
+          animation: flow 25s ease-in-out infinite;
         }
 
-        .aurora-2 {
-          top: 15%;
-          left: -30%;
-          background: linear-gradient(90deg, transparent, rgba(255, 0, 110, 0.4), rgba(0, 245, 255, 0.4), transparent);
-          animation-delay: 5s;
+        .wave-1 {
+          background: radial-gradient(circle at 20% 30%, #ffcbe4, transparent);
+          animation-duration: 30s;
         }
 
-        .aurora-3 {
-          top: 25%;
-          left: -70%;
-          background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), rgba(255, 195, 0, 0.3), transparent);
-          animation-delay: 10s;
+        .wave-2 {
+          background: radial-gradient(circle at 40% 50%, #e0e7ff, transparent);
+          animation-duration: 40s;
+          animation-delay: -5s;
         }
 
-        @keyframes auroraWave {
-          0%, 100% { transform: translateX(0) skewX(-5deg); }
-          50% { transform: translateX(30%) skewX(5deg); }
-        }
-
-        /* Particle Burst Container */
-        .particle-burst-container {
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          z-index: 10000;
-        }
-
-        .burst-particle {
-          position: fixed;
-          font-size: 24px;
-          transform: translate(-50%, -50%);
-          animation: burstOut 1s ease-out forwards;
-        }
-
-        @keyframes burstOut {
-          0% {
-            opacity: 1;
-            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(0) scale(0.5);
-          }
-          100% {
-            opacity: 0;
-            transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-150px) scale(1.2);
-          }
-        }
-
-        /* Morphing Text Animation */
-        .morph-text {
-          display: inline-block;
-          animation: morphIn 0.6s ease-out;
-        }
-
-        @keyframes morphIn {
-          0% {
-            opacity: 0;
-            filter: blur(10px);
-            transform: translateY(20px) scale(0.9);
-          }
-          100% {
-            opacity: 1;
-            filter: blur(0);
-            transform: translateY(0) scale(1);
-          }
-        }
-
-        /* Glitch Text Effect */
-        .glitch-text {
-          position: relative;
-        }
-
-        .glitch-text:hover::before,
-        .glitch-text:hover::after {
-          content: attr(data-text);
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          background: transparent;
-        }
-
-        .glitch-text:hover::before {
-          color: #00f5ff;
-          animation: glitch-1 0.3s infinite;
-          clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-        }
-
-        .glitch-text:hover::after {
-          color: #ff006e;
-          animation: glitch-2 0.3s infinite;
-          clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
-        }
-
-        @keyframes glitch-1 {
-          0%, 100% { transform: translateX(0); }
-          20% { transform: translateX(-3px); }
-          40% { transform: translateX(3px); }
-          60% { transform: translateX(-1px); }
-          80% { transform: translateX(2px); }
-        }
-
-        @keyframes glitch-2 {
-          0%, 100% { transform: translateX(0); }
-          20% { transform: translateX(3px); }
-          40% { transform: translateX(-3px); }
-          60% { transform: translateX(1px); }
-          80% { transform: translateX(-2px); }
-        }
-
-        /* Typewriter Effect */
-        .typewriter {
-          min-height: 80px;
-        }
-
-        .typewriter-cursor {
-          animation: cursorBlink 1s step-end infinite;
-          color: #00f5ff;
-          font-weight: 100;
-        }
-
-        @keyframes cursorBlink {
-          0%, 50% { opacity: 1; }
-          51%, 100% { opacity: 0; }
-        }
-
-        /* Ripple Effect */
-        .ripple-btn {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .ripple {
-          position: absolute;
-          width: 20px;
-          height: 20px;
-          background: rgba(255, 255, 255, 0.5);
-          border-radius: 50%;
-          transform: translate(-50%, -50%) scale(0);
-          animation: rippleExpand 0.6s ease-out;
-          pointer-events: none;
-        }
-
-        @keyframes rippleExpand {
-          to {
-            transform: translate(-50%, -50%) scale(20);
-            opacity: 0;
-          }
-        }
-
-        /* 3D Tilt Cards */
-        .tilt-card {
-          transform-style: preserve-3d;
-          transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
-          transition: transform 0.1s ease-out;
-        }
-
-        .tilt-card:hover {
-          transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateZ(20px);
-        }
-
-        @keyframes floatUp {
-          0% {
-            transform: translateY(0) rotate(0deg) scale(1);
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.3;
-          }
-          90% {
-            opacity: 0.3;
-          }
-          100% {
-            transform: translateY(-100vh) rotate(360deg) scale(0.5);
-            opacity: 0;
-          }
+        .wave-3 {
+          background: radial-gradient(circle at 60% 30%, #ecfeff, transparent);
+          animation-duration: 35s;
+          animation-delay: -10s;
         }
 
         /* Hero Section */
-        .hero-3d {
-          min-height: 100vh;
+        .hero-3d.centered {
+          min-height: 90vh;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding: 120px 80px;
-          position: relative;
+          justify-content: center;
+          text-align: center;
+          padding: 80px 20px;
           z-index: 10;
-          gap: 60px;
+          position: relative;
         }
 
         .hero-content {
-          flex: 1;
-          max-width: 600px;
-          overflow: visible;
+          max-width: 800px;
         }
 
-        /* Viebo Logo Styles */
+        /* Minimal Logo */
         .viebo-logo-container {
           display: flex;
           flex-direction: column;
-          align-items: center; /* Centered instead of flex-start */
-          margin-bottom: 50px; /* Increased from 30px */
-          padding-top: 10px;
-          overflow: visible;
+          align-items: center;
+          margin-bottom: 40px;
         }
 
-        /* Viebo Text Logo */
-        .viebo-text {
-          display: flex;
-          font-family: 'Poppins', sans-serif;
-          font-size: 72px;
-          font-weight: 800;
-          font-style: italic;
-          letter-spacing: 2px;
-        }
-
-        .viebo-text .letter {
-          display: inline-block;
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          filter: drop-shadow(0 4px 15px rgba(196, 76, 255, 0.4));
-        }
-
-        .hero-intro .hero-letter {
-          opacity: 0;
-          transform: translateY(28px) scale(0.94);
-        }
-
-        .hero-loaded .hero-letter {
-          animation: logoLetterIn 650ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          animation-delay: calc(0.1s + (var(--letter-index, 0) * 80ms));
-        }
-
-        .hero-intro .i-heart-dot {
-          opacity: 0;
-          transform: translateX(-50%) scale(0.6);
-        }
-
-        .hero-loaded .i-heart-dot {
-          animation: iHeartAppear 550ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-          animation-delay: 0.08s;
-        }
-
-        @keyframes logoLetterIn {
-          from { opacity: 0; transform: translateY(28px) scale(0.94); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes iHeartAppear {
-          0% { opacity: 0; transform: translateX(-50%) scale(0.6); }
-          70% { opacity: 1; transform: translateX(-50%) scale(1.2); }
-          100% { opacity: 1; transform: translateX(-50%) scale(1); }
-        }
-
-        .letter-v {
-          background: linear-gradient(180deg, #ff5f8f 0%, #ff6b9d 50%, #ff8fab 100%);
-          margin-right: 2px;
-        }
-        .letter-i {
-          position: relative;
-          display: inline-block !important;
-          background: none !important;
-          -webkit-text-fill-color: unset !important;
-          overflow: visible;
-          vertical-align: baseline;
-        }
-        .i-heart-dot {
-          position: absolute;
-          top: -0.60em;
-          left: 63%;
-          transform: translateX(-50%);
-          width: 22px;
-          height: 22px;
-          animation: iHeartPulse 1.5s ease-in-out infinite, iHeartGlow 2s ease-in-out infinite;
-          filter: drop-shadow(0 0 8px rgba(196, 76, 255, 0.8));
-        }
-        .i-heart-svg {
-          width: 100%;
-          height: 100%;
-        }
-        .i-stem {
-          background: linear-gradient(180deg, #e056c0 0%, #d44cbf 50%, #c44cff 100%);
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          font-size: inherit;
-        }
-        @keyframes iHeartPulse {
-          0%, 100% { transform: translateX(-50%) scale(1); }
-          50% { transform: translateX(-50%) scale(1.15); }
-        }
-        @keyframes iHeartGlow {
-          0%, 100% { filter: drop-shadow(0 0 8px rgba(196, 76, 255, 0.8)); }
-          50% { filter: drop-shadow(0 0 15px rgba(255, 107, 157, 1)) drop-shadow(0 0 25px rgba(196, 76, 255, 0.6)); }
-        }
-        .letter-e {
-          background: linear-gradient(180deg, #c44cff 0%, #b050f7 50%, #a855f7 100%);
-        }
-        .letter-b {
-          background: linear-gradient(180deg, #a855f7 0%, #9955f6 50%, #8b5cf6 100%);
-        }
-        .letter-o {
-          background: linear-gradient(180deg, #8b5cf6 0%, #5eaaff 50%, #00d4ff 100%);
-        }
-
-        .hero-title-3d {
-          font-size: 64px;
-          font-weight: 800;
-          line-height: 1.1;
-          margin-bottom: 24px;
-        }
-
-        .title-line {
-          display: block;
-          color: #ffffff;
-          text-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
-        }
-
-        .title-highlight {
+        .viebo-text-minimal {
           display: flex;
           align-items: center;
-          gap: 16px;
+          font-family: 'Playfair Display', serif;
+          font-size: 52px;
+          color: #be185d;
+          font-style: italic;
+          letter-spacing: -1px;
+          position: relative;
         }
 
-        .gradient-text {
-          background: linear-gradient(135deg, #00f5ff 0%, #ff006e 50%, #ffc300 100%);
-          background-size: 220% 220%;
+        .heart-dot {
+          width: 12px;
+          height: 12px;
+          background: #db2777;
+          border-radius: 50%;
+          margin: 0 2px;
+          box-shadow: 0 0 15px rgba(219, 39, 119, 0.4);
+        }
+
+        .accent-divider {
+          margin-top: 10px;
+          width: 60px;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, #be185d, transparent);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .accent-divider .dot {
+          width: 4px;
+          height: 4px;
+          background: #be185d;
+          transform: rotate(45deg);
+        }
+
+        /* Typography */
+        .hero-title-serif {
+          font-family: 'Playfair Display', serif;
+          font-size: 80px;
+          font-weight: 700;
+          line-height: 1.05;
+          color: #1e293b;
+          margin-bottom: 30px;
+        }
+
+        .morph-wrapper {
+          position: relative;
+          display: inline-block;
+          min-width: 200px;
+        }
+
+        .morph-text {
+          font-style: italic;
+          display: inline-block;
+          animation: slideUpFade 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .accent-pink {
+          background: linear-gradient(135deg, #be185d, #ec4899);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
-          background-clip: text;
-          filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.4));
-          animation: gradientBreathe 9s ease-in-out infinite;
         }
 
-        @keyframes gradientBreathe {
-          0%, 100% { background-position: 0% 40%; }
-          50% { background-position: 100% 60%; }
+        .heart-inline {
+          font-size: 40px;
+          margin-left: 10px;
+          display: inline-block;
+          animation: softBeat 3s ease-in-out infinite;
         }
 
-        .heart-icon {
-          color: #ff006e;
-          animation: heartbeat 1.5s ease-in-out infinite;
-          filter: drop-shadow(0 0 15px rgba(255, 0, 110, 0.6));
+        @keyframes slideUpFade {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes heartbeat {
+        @keyframes softBeat {
           0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.2); }
+          50% { transform: scale(1.1); }
         }
 
-        .hero-description {
-          font-size: 18px;
-          color: #a0aec0;
-          line-height: 1.7;
-          margin-bottom: 32px;
+        .hero-description-light {
+          font-size: 19px;
+          color: #64748b;
+          line-height: 1.6;
+          margin-bottom: 40px;
+          font-weight: 400;
         }
 
+        /* Polished Buttons */
         .hero-buttons {
           display: flex;
-          gap: 16px;
-          margin-bottom: 48px;
-        }
-
-        .hero-3d {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 120px 60px;
-          min-height: calc(100vh - 80px);
-          max-width: 1400px;
-          margin: 0 auto;
-          position: relative;
-          z-index: 10;
-          overflow: visible;
-        }
-
-        .hero-3d.centered {
+          gap: 20px;
           justify-content: center;
-          text-align: center;
-          padding: 100px 20px; /* Reduced from 160px to shift up */
+          margin-bottom: 50px;
         }
 
-        .hero-content {
-          flex: 1;
-          max-width: 600px;
-          position: relative;
-          z-index: 2;
+        .btn-primary-polished {
+          padding: 16px 36px;
+          background: linear-gradient(135deg, #be185d, #db2777);
+          color: white;
+          border-radius: 50px;
+          font-weight: 600;
+          font-size: 16px;
+          text-decoration: none;
+          box-shadow: 0 10px 25px rgba(190, 24, 93, 0.25);
+          transition: all 0.3s ease;
+        }
+
+        .btn-primary-polished:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 15px 30px rgba(190, 24, 93, 0.35);
+        }
+
+        .btn-secondary-outline {
+          padding: 16px 36px;
+          background: white;
+          color: #be185d;
+          border: 1.5px solid #be185d;
+          border-radius: 50px;
+          font-weight: 600;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-secondary-outline:hover {
+          background: #fff1f2;
+          transform: translateY(-2px);
+        }
+
+        /* Minimal Features List */
+        .hero-features-minimal {
+          display: flex;
+          gap: 24px;
+          justify-content: center;
+          color: #94a3b8;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+          .hero-title-serif {
+            font-size: 48px;
+          }
+          .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+          }
+          .hero-features-minimal {
+            flex-direction: column;
+            gap: 10px;
+          }
+          .morph-wrapper {
+            min-width: unset;
+          }
         }
 
         .hero-content.centered {
