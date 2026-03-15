@@ -117,8 +117,8 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      // Connect to socket
-      const newSocket = io('http://localhost:5000');
+      // Connect to socket - use relative path in production, localhost in dev
+      const newSocket = io(process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:5000');
       newSocket.emit('register', user.id);
       setSocket(newSocket);
 
