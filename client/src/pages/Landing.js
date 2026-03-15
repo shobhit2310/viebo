@@ -180,7 +180,7 @@ const Landing = () => {
           display: flex;
           align-items: center;
           font-family: 'Playfair Display', serif;
-          font-size: 52px;
+          font-size: 42px;
           color: #be185d;
           font-style: italic;
           letter-spacing: -1px;
@@ -216,17 +216,17 @@ const Landing = () => {
         /* Typography */
         .hero-title-serif {
           font-family: 'Playfair Display', serif;
-          font-size: 80px;
+          font-size: 56px;
           font-weight: 700;
-          line-height: 1.05;
+          line-height: 1.1;
           color: #1e293b;
-          margin-bottom: 30px;
+          margin-bottom: 24px;
         }
 
         .morph-wrapper {
           position: relative;
           display: inline-block;
-          min-width: 200px;
+          min-width: 150px;
         }
 
         .morph-text {
@@ -242,8 +242,8 @@ const Landing = () => {
         }
 
         .heart-inline {
-          font-size: 40px;
-          margin-left: 10px;
+          font-size: 32px;
+          margin-left: 8px;
           display: inline-block;
           animation: softBeat 3s ease-in-out infinite;
         }
@@ -259,7 +259,7 @@ const Landing = () => {
         }
 
         .hero-description-light {
-          font-size: 19px;
+          font-size: 17px;
           color: #64748b;
           line-height: 1.6;
           margin-bottom: 40px;
@@ -320,7 +320,7 @@ const Landing = () => {
 
         @media (max-width: 768px) {
           .hero-title-serif {
-            font-size: 48px;
+            font-size: 36px;
           }
           .hero-buttons {
             flex-direction: column;
