@@ -11,9 +11,7 @@ const Landing = () => {
   const [isFeatureDeckOpen, setIsFeatureDeckOpen] = useState(false);
   const [isHeroReady, setIsHeroReady] = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState(0);
-  const [cursorSparks, setCursorSparks] = useState([]);
   const [glowMagnet, setGlowMagnet] = useState({ x: 0, y: 0 });
-  const [glassMagnet, setGlassMagnet] = useState({ x: 0, y: 0 });
   
   // Morphing tagline words
   const morphWords = ['Perfect Match', 'True Love', 'Soulmate', 'Connection'];
@@ -242,21 +240,7 @@ const Landing = () => {
 
   const resetMagnetic = (setter) => setter({ x: 0, y: 0 });
 
-  const handleHeroMouseMove = (event) => {
-    const bounds = heroVisualRef.current?.getBoundingClientRect();
-    if (!bounds || Math.random() > 0.22) return;
 
-    const spark = {
-      id: `${Date.now()}-${Math.random()}`,
-      x: event.clientX - bounds.left,
-      y: event.clientY - bounds.top
-    };
-
-    setCursorSparks((prev) => [...prev.slice(-18), spark]);
-    setTimeout(() => {
-      setCursorSparks((prev) => prev.filter((item) => item.id !== spark.id));
-    }, 700);
-  };
 
   // 3D tilt for cards
   const handleCardTilt = (event, cardId) => {
