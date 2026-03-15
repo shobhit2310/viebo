@@ -43,10 +43,7 @@ const Landing = () => {
         <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%`, background: '#be185d' }} />
       </div>
 
-      <div 
-        className={`landing-page ${isHeroReady ? 'hero-loaded' : 'hero-intro'}`} 
-        style={{ minHeight: '100vh', paddingTop: '80px', position: 'relative', overflow: 'hidden' }}
-      >
+      <div className={`landing-page ${isHeroReady ? 'hero-loaded' : 'hero-intro'}`}>
         <LandingNavbar />
         
         {/* Fluid Ripple Background */}
@@ -56,17 +53,17 @@ const Landing = () => {
           <div className="liquid-blob blob-3"></div>
           <div className="liquid-blob blob-4"></div>
           <div className="noise-overlay"></div>
-          
-          {/* SVG Filter for Liquid Distortion */}
-          <svg className="liquid-filter-svg">
-            <filter id="liquid">
-              <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2">
-                <animate attributeName="baseFrequency" dur="30s" values="0.01;0.02;0.01" repeatCount="indefinite" />
-              </feTurbulence>
-              <feDisplacementMap in="SourceGraphic" scale="40" />
-            </filter>
-          </svg>
         </div>
+
+        {/* SVG Filter for Liquid Distortion - Kept outside for better performance */}
+        <svg className="liquid-filter-svg">
+          <filter id="liquid">
+            <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="2">
+              <animate attributeName="baseFrequency" dur="30s" values="0.012;0.018;0.012" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" scale="40" />
+          </filter>
+        </svg>
 
         <div className="hero-3d centered">
           <div className="hero-content">
@@ -117,14 +114,20 @@ const Landing = () => {
       </div>
 
       <style jsx>{`
+        .landing-page {
+          min-height: 100vh;
+          padding-top: 80px;
+          position: relative;
+          overflow: hidden;
+          background: #fffafa;
+          color: #1e293b;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
         .fluid-bg-container {
           position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-          background: #fffafa;
+          inset: 0;
+          z-index: 0;
           overflow: hidden;
           filter: url(#liquid);
         }
@@ -133,73 +136,74 @@ const Landing = () => {
           position: absolute;
           border-radius: 50%;
           filter: blur(80px);
-          opacity: 0.5;
-          mix-blend-mode: multiply;
-          animation: move-blobs 35s ease-in-out infinite;
+          opacity: 0.6;
+          mix-blend-mode: normal;
+          animation: move-blobs 40s ease-in-out infinite;
         }
 
         .blob-1 {
-          width: 600px;
-          height: 600px;
+          width: 800px;
+          height: 800px;
           background: #ffcbe4;
-          top: -100px;
-          left: -100px;
-          animation-duration: 40s;
-        }
-
-        .blob-2 {
-          width: 500px;
-          height: 500px;
-          background: #e0e7ff;
-          top: 40%;
-          right: -100px;
-          animation-delay: -5s;
-          animation-duration: 35s;
-        }
-
-        .blob-3 {
-          width: 550px;
-          height: 550px;
-          background: #ffedd5;
-          bottom: -100px;
-          left: 20%;
-          animation-delay: -10s;
+          top: -200px;
+          left: -200px;
           animation-duration: 45s;
         }
 
+        .blob-2 {
+          width: 700px;
+          height: 700px;
+          background: #e0e7ff;
+          top: 40%;
+          right: -200px;
+          animation-delay: -7s;
+          animation-duration: 38s;
+        }
+
+        .blob-3 {
+          width: 750px;
+          height: 750px;
+          background: #ffedd5;
+          bottom: -200px;
+          left: 10%;
+          animation-delay: -12s;
+          animation-duration: 50s;
+        }
+
         .blob-4 {
-          width: 450px;
-          height: 450px;
+          width: 600px;
+          height: 600px;
           background: #fdf2f8;
-          top: 10%;
-          left: 40%;
-          animation-delay: -15s;
-          animation-duration: 30s;
+          top: 5%;
+          left: 35%;
+          animation-delay: -18s;
+          animation-duration: 33s;
         }
 
         .noise-overlay {
           position: absolute;
           inset: 0;
-          z-index: 2;
-          opacity: 0.03;
+          z-index: 5;
+          opacity: 0.04;
           pointer-events: none;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
         .liquid-filter-svg {
-          position: absolute;
+          position: fixed;
+          top: 0;
+          left: 0;
           width: 0;
           height: 0;
           pointer-events: none;
         }
 
         @keyframes move-blobs {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(100px, 50px) scale(1.1); }
-          66% { transform: translate(-50px, 100px) scale(0.9); }
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          33% { transform: translate(120px, 60px) scale(1.1) rotate(10deg); }
+          66% { transform: translate(-60px, 120px) scale(0.9) rotate(-10deg); }
         }
 
-        /* Hero Section */
         .hero-3d.centered {
           min-height: 90vh;
           display: flex;
@@ -215,7 +219,6 @@ const Landing = () => {
           max-width: 800px;
         }
 
-        /* Minimal Logo */
         .viebo-logo-container {
           display: flex;
           flex-direction: column;
@@ -260,7 +263,6 @@ const Landing = () => {
           transform: rotate(45deg);
         }
 
-        /* Typography */
         .hero-title-serif {
           font-family: 'Playfair Display', serif;
           font-size: 56px;
@@ -313,7 +315,6 @@ const Landing = () => {
           font-weight: 400;
         }
 
-        /* Polished Buttons */
         .hero-buttons {
           display: flex;
           gap: 20px;
@@ -355,7 +356,6 @@ const Landing = () => {
           transform: translateY(-2px);
         }
 
-        /* Minimal Features List */
         .hero-features-minimal {
           display: flex;
           gap: 24px;
