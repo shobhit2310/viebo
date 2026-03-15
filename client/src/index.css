@@ -752,6 +752,11 @@ body {
     display: none;
   }
 
+  .lucide {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
   /* Cards */
   .card {
     padding: 16px;

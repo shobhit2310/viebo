@@ -4314,7 +4314,7 @@ const Landing = () => {
         @media (max-width: 1024px) {
           .hero-3d {
             flex-direction: column;
-            padding: 100px 40px;
+            padding: 80px 40px;
             text-align: center;
           }
 
@@ -4351,7 +4351,12 @@ const Landing = () => {
           }
 
           .hero-visual {
-            margin-top: 60px;
+            margin-top: 40px;
+          }
+
+          .slideshow-container {
+            width: 320px;
+            height: 480px;
           }
 
           .features-grid {
@@ -4378,12 +4383,17 @@ const Landing = () => {
 
         @media (max-width: 768px) {
           .hero-3d {
-            padding: 80px 20px;
+            padding: 60px 20px;
           }
 
           /* Logo responsive - mobile */
           .viebo-logo-container {
             margin-bottom: 20px;
+          }
+
+          .loading-logo {
+            font-size: 48px;
+            margin-bottom: 30px;
           }
 
           .i-heart-dot {
@@ -4394,18 +4404,28 @@ const Landing = () => {
           }
 
           .viebo-text {
-            font-size: 48px;
+            font-size: 42px;
             letter-spacing: 1px;
           }
 
           .hero-title-3d {
-            font-size: 36px;
+            font-size: 32px;
+          }
+
+          .heart-icon {
+            width: 32px;
+            height: 32px;
+          }
+
+          .slideshow-container {
+            width: 280px;
+            height: 420px;
           }
 
           .features-section,
           .how-it-works,
           .cta-section {
-            padding: 60px 20px;
+            padding: 50px 20px;
           }
 
           .features-grid {
@@ -4422,11 +4442,11 @@ const Landing = () => {
           .features-grid:not(.deck-open) .deck-card:nth-child(6) { transform: translateY(105px) rotateX(25deg) scale(0.9); }
 
           .section-title {
-            font-size: 36px;
+            font-size: 32px;
           }
 
           .cta-content h2 {
-            font-size: 32px;
+            font-size: 28px;
           }
 
           .landing-footer {
@@ -4446,20 +4466,20 @@ const Landing = () => {
           }
 
           .stat-number {
-            font-size: 36px;
+            font-size: 32px;
           }
 
           /* Testimonials responsive */
           .testimonials-section {
-            padding: 60px 20px;
+            padding: 50px 20px;
           }
 
           .testimonials-carousel {
-            height: 320px;
+            height: 300px;
           }
 
           .testimonial-card {
-            padding: 30px 20px;
+            padding: 25px 15px;
           }
 
           .testimonial-card.prev,
@@ -4468,7 +4488,7 @@ const Landing = () => {
           }
 
           .testimonial-quote {
-            font-size: 16px;
+            font-size: 15px;
           }
 
           /* Disable cursor glow on mobile */
@@ -4479,6 +4499,39 @@ const Landing = () => {
           /* Simplify aurora on mobile */
           .aurora-container {
             opacity: 0.5;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .viebo-text {
+            font-size: 36px;
+          }
+
+          .hero-title-3d {
+            font-size: 28px;
+          }
+
+          .hero-description {
+            font-size: 14px;
+            line-height: 1.5;
+          }
+
+          .slideshow-container {
+            width: 240px;
+            height: 380px;
+          }
+
+          .btn-glow, .btn-glass {
+            padding: 12px 24px;
+            font-size: 14px;
+          }
+
+          .loading-logo {
+            font-size: 36px;
+          }
+
+          .loading-bar {
+            width: 150px;
           }
         }
 
