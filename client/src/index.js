@@ -35,4 +35,12 @@ if ('serviceWorker' in navigator) {
         console.log('SW registration failed:', error);
       });
   });
+
+  // Reload the page when a new service worker takes over
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
 }

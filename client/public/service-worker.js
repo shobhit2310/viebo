@@ -71,11 +71,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Network First for index.html and root path
+  if (request.mode === 'navigate' || url.pathname === '/' || url.pathname === '/index.html') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => cache.put(request, responseClone));
+            return response;
+          }
+          return caches.match(request);
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(request)
       .then((cachedResponse) => {
         if (cachedResponse) {
-          // Return cached response but fetch update in background
+          // Return cached response but fetch update in background (Stale-While-Revalidate)
           event.waitUntil(
             fetch(request)
               .then((response) => {
@@ -102,7 +119,7 @@ self.addEventListener('fetch', (event) => {
             return response;
           })
           .catch(() => {
-            // Offline fallback for navigation requests
+            // Offline fallback for navigation requests (already handled above but as a safety)
             if (request.mode === 'navigate') {
               return caches.match('/index.html');
             }
