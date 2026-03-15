@@ -1007,8 +1007,8 @@ const Landing = () => {
         .viebo-logo-container {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          margin-bottom: 30px;
+          align-items: center; /* Centered instead of flex-start */
+          margin-bottom: 50px; /* Increased from 30px */
           padding-top: 10px;
           overflow: visible;
         }
@@ -1187,7 +1187,7 @@ const Landing = () => {
         .hero-3d.centered {
           justify-content: center;
           text-align: center;
-          padding: 160px 20px;
+          padding: 100px 20px; /* Reduced from 160px to shift up */
         }
 
         .hero-content {
