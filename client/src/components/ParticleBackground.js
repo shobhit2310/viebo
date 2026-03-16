@@ -105,7 +105,7 @@ const ParticleBackground = ({ children }) => {
       <style jsx>{`
         .particle-bg-wrapper {
           min-height: 100vh;
-          background: linear-gradient(135deg, #030014 0%, #0a0520 25%, #110a30 50%, #0a0520 75%, #030014 100%);
+          background: transparent;
           overflow-x: hidden;
           position: relative;
         }

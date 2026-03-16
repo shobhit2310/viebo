@@ -8,6 +8,7 @@ import { API_URL } from './config';
 import Navbar from './components/Navbar';
 import { NotificationProvider, useNotifications } from './components/NotificationProvider';
 import InstallPrompt from './components/InstallPrompt';
+import FluidBackground from './components/FluidBackground';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -26,7 +27,6 @@ import VerifyPending from './pages/VerifyPending';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import ResendVerification from './pages/ResendVerification';
-import WaveBackground from './components/WaveBackground';
 
 // Context
 const AuthContext = createContext(null);
@@ -195,8 +195,8 @@ function App() {
           <NotificationProvider>
             <Router>
               <div className="App" style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
-                <WaveBackground />
-              {user && !needsProfileCompletion && <Navbar />}
+                <FluidBackground />
+                {user && !needsProfileCompletion && <Navbar />}
               <SocketNotificationHandler />
               <InstallPrompt />
               <ErrorBoundary>
