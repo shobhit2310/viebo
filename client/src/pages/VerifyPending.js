@@ -80,7 +80,8 @@ const VerifyPending = () => {
           maxWidth: '560px',
           borderRadius: '24px',
           border: '1px solid rgba(236, 72, 153, 0.35)',
-          background: 'linear-gradient(145deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.92))',
+          background: 'rgba(30, 41, 59, 0.6)',
+          backdropFilter: 'blur(12px)',
           padding: '34px 28px',
           overflow: 'hidden',
           boxShadow: '0 24px 70px rgba(0, 0, 0, 0.42)'
