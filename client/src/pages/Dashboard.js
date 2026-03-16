@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -17,7 +18,7 @@ const Dashboard = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/events/my-events');
+      const res = await axios.get(`${API_URL}/events/my-events`);
       setEvents(res.data);
     } catch (err) {
       console.error('Failed to fetch events:', err);

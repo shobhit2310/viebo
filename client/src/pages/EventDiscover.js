@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -77,7 +78,7 @@ const EventDiscover = () => {
   const fetchData = async () => {
     try {
       const [eventsRes, categoriesRes, vibesRes, recommendedRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/event-features/discover', {
+        axios.get(`${API_URL}/event-features/discover`, {
           params: {
             category: selectedCategory,
             vibe: selectedVibe,
@@ -85,9 +86,9 @@ const EventDiscover = () => {
             upcoming: 'true'
           }
         }),
-        axios.get('http://localhost:5000/api/event-features/categories'),
-        axios.get('http://localhost:5000/api/event-features/vibes'),
-        axios.get('http://localhost:5000/api/event-features/recommended')
+        axios.get(`${API_URL}/event-features/categories`),
+        axios.get(`${API_URL}/event-features/vibes`),
+        axios.get(`${API_URL}/event-features/recommended`)
       ]);
       
       setEvents(eventsRes.data);
@@ -104,7 +105,7 @@ const EventDiscover = () => {
   const joinEvent = async (eventCode) => {
     try {
       const position = await getCurrentPosition();
-      const res = await axios.post('http://localhost:5000/api/events/join', {
+      const res = await axios.post(`${API_URL}/events/join`, {
         code: eventCode,
         userLatitude: position.latitude,
         userLongitude: position.longitude

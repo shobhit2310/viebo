@@ -1,0 +1,220 @@
+﻿diff --git a/client/src/pages/Chat.js b/client/src/pages/Chat.js
+index 4c10ede..80d1c7f 100644
+--- a/client/src/pages/Chat.js
++++ b/client/src/pages/Chat.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState, useEffect, useRef, useCallback } from 'react';
+ import { useParams, useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+@@ -93,7 +94,7 @@ const Chat = () => {
+   const fetchChatData = async () => {
+     try {
+       const [matchRes, messagesRes] = await Promise.all([
+-        axios.get('http://localhost:5000/api/matches/my-matches'),
++        axios.get(`${API_URL}/matches/my-matches`),
+         axios.get(`http://localhost:5000/api/chat/${matchId}`)
+       ]);
+       
+@@ -160,7 +161,7 @@ const Chat = () => {
+ 
+     setSending(true);
+     try {
+-      await axios.post('http://localhost:5000/api/chat/send', {
++      await axios.post(`${API_URL}/chat/send`, {
+         matchId,
+         content: newMessage.trim()
+       });
+@@ -201,7 +202,7 @@ const Chat = () => {
+   // Handle photo send
+   const handlePhotoSend = async (imageData) => {
+     try {
+-      await axios.post('http://localhost:5000/api/chat/send', {
++      await axios.post(`${API_URL}/chat/send`, {
+         matchId,
+         content: imageData,
+         type: 'image'
+@@ -215,7 +216,7 @@ const Chat = () => {
+   // Handle voice message send
+   const handleVoiceSend = async (audioData, duration) => {
+     try {
+-      await axios.post('http://localhost:5000/api/chat/send', {
++      await axios.post(`${API_URL}/chat/send`, {
+         matchId,
+         content: audioData,
+         type: 'voice',
+@@ -230,7 +231,7 @@ const Chat = () => {
+   // Handle GIF send
+   const handleGifSend = async (gifUrl) => {
+     try {
+-      await axios.post('http://localhost:5000/api/chat/send', {
++      await axios.post(`${API_URL}/chat/send`, {
+         matchId,
+         content: gifUrl,
+         type: 'gif'
+@@ -244,7 +245,7 @@ const Chat = () => {
+   // Handle icebreaker question use - send directly
+   const handleIcebreakerUse = async (question) => {
+     try {
+-      await axios.post('http://localhost:5000/api/chat/send', {
++      await axios.post(`${API_URL}/chat/send`, {
+         matchId,
+         content: question
+       });
+@@ -258,7 +259,7 @@ const Chat = () => {
+   const handleDatePropose = (dateData) => {
+     // Send system message about date proposal
+     const proposalMessage = `📅 I'd love to plan a date! How about ${dateData.activity} at ${dateData.location} on ${dateData.date} at ${dateData.time}?`;
+-    axios.post('http://localhost:5000/api/chat/send', {
++    axios.post(`${API_URL}/chat/send`, {
+       matchId,
+       content: proposalMessage
+     });
+diff --git a/client/src/pages/CreateEvent.js b/client/src/pages/CreateEvent.js
+index 74fd8e1..b2c8e1a 100644
+--- a/client/src/pages/CreateEvent.js
++++ b/client/src/pages/CreateEvent.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState } from 'react';
+ import { useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+@@ -120,7 +121,7 @@ const CreateEvent = () => {
+         ...formData,
+         maxAttendees: formData.maxAttendees ? parseInt(formData.maxAttendees) : null
+       };
+-      const res = await axios.post('http://localhost:5000/api/events/create', submitData);
++      const res = await axios.post(`${API_URL}/events/create`, submitData);
+       setCreatedEvent(res.data);
+     } catch (err) {
+       console.error('Create event submission error:', err);
+diff --git a/client/src/pages/Dashboard.js b/client/src/pages/Dashboard.js
+index eab4f4d..cfee062 100644
+--- a/client/src/pages/Dashboard.js
++++ b/client/src/pages/Dashboard.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState, useEffect } from 'react';
+ import { Link } from 'react-router-dom';
+ import axios from 'axios';
+@@ -17,7 +18,7 @@ const Dashboard = () => {
+ 
+   const fetchEvents = async () => {
+     try {
+-      const res = await axios.get('http://localhost:5000/api/events/my-events');
++      const res = await axios.get(`${API_URL}/events/my-events`);
+       setEvents(res.data);
+     } catch (err) {
+       console.error('Failed to fetch events:', err);
+diff --git a/client/src/pages/EventDetail.js b/client/src/pages/EventDetail.js
+index 5fedd24..3f5368c 100644
+--- a/client/src/pages/EventDetail.js
++++ b/client/src/pages/EventDetail.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState, useEffect } from 'react';
+ import { useParams, useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+@@ -76,7 +77,7 @@ const EventDetail = () => {
+   const sendCrush = async (targetUserId) => {
+     setSendingCrush(targetUserId);
+     try {
+-      const res = await axios.post('http://localhost:5000/api/matches/crush', {
++      const res = await axios.post(`${API_URL}/matches/crush`, {
+         eventId: id,
+         targetUserId
+       });
+diff --git a/client/src/pages/EventDiscover.js b/client/src/pages/EventDiscover.js
+index fa97245..fff7cf2 100644
+--- a/client/src/pages/EventDiscover.js
++++ b/client/src/pages/EventDiscover.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState, useEffect } from 'react';
+ import { useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+@@ -77,7 +78,7 @@ const EventDiscover = () => {
+   const fetchData = async () => {
+     try {
+       const [eventsRes, categoriesRes, vibesRes, recommendedRes] = await Promise.all([
+-        axios.get('http://localhost:5000/api/event-features/discover', {
++        axios.get(`${API_URL}/event-features/discover`, {
+           params: {
+             category: selectedCategory,
+             vibe: selectedVibe,
+@@ -85,9 +86,9 @@ const EventDiscover = () => {
+             upcoming: 'true'
+           }
+         }),
+-        axios.get('http://localhost:5000/api/event-features/categories'),
+-        axios.get('http://localhost:5000/api/event-features/vibes'),
+-        axios.get('http://localhost:5000/api/event-features/recommended')
++        axios.get(`${API_URL}/event-features/categories`),
++        axios.get(`${API_URL}/event-features/vibes`),
++        axios.get(`${API_URL}/event-features/recommended`)
+       ]);
+       
+       setEvents(eventsRes.data);
+@@ -104,7 +105,7 @@ const EventDiscover = () => {
+   const joinEvent = async (eventCode) => {
+     try {
+       const position = await getCurrentPosition();
+-      const res = await axios.post('http://localhost:5000/api/events/join', {
++      const res = await axios.post(`${API_URL}/events/join`, {
+         code: eventCode,
+         userLatitude: position.latitude,
+         userLongitude: position.longitude
+diff --git a/client/src/pages/JoinEvent.js b/client/src/pages/JoinEvent.js
+index 369f997..7a474c1 100644
+--- a/client/src/pages/JoinEvent.js
++++ b/client/src/pages/JoinEvent.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState } from 'react';
+ import { useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+@@ -42,7 +43,7 @@ const JoinEvent = () => {
+ 
+     try {
+       const position = await getCurrentPosition();
+-      const res = await axios.post('http://localhost:5000/api/events/join', {
++      const res = await axios.post(`${API_URL}/events/join`, {
+         code: code.toUpperCase(),
+         userLatitude: position.latitude,
+         userLongitude: position.longitude
+diff --git a/client/src/pages/Matches.js b/client/src/pages/Matches.js
+index e941868..55d55aa 100644
+--- a/client/src/pages/Matches.js
++++ b/client/src/pages/Matches.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState, useEffect } from 'react';
+ import { useNavigate } from 'react-router-dom';
+ import axios from 'axios';
+@@ -15,7 +16,7 @@ const Matches = () => {
+ 
+   const fetchMatches = async () => {
+     try {
+-      const res = await axios.get('http://localhost:5000/api/matches/my-matches');
++      const res = await axios.get(`${API_URL}/matches/my-matches`);
+       setMatches(res.data);
+     } catch (err) {
+       console.error('Failed to fetch matches:', err);
+diff --git a/client/src/pages/Profile.js b/client/src/pages/Profile.js
+index c4e650b..93c7c5a 100644
+--- a/client/src/pages/Profile.js
++++ b/client/src/pages/Profile.js
+@@ -1,3 +1,4 @@
++import { API_URL } from "../config";
+ import React, { useState } from 'react';
+ import axios from 'axios';
+ import { User, Mail, Calendar, Save, Sparkles, Heart } from 'lucide-react';
+@@ -53,7 +54,7 @@ const Profile = () => {
+     setLoading(true);
+ 
+     try {
+-      const res = await axios.put('http://localhost:5000/api/auth/profile', formData);
++      const res = await axios.put(`${API_URL}/auth/profile`, formData);
+       updateUser(res.data);
+       setSuccess(true);
+       setTimeout(() => setSuccess(false), 3000);

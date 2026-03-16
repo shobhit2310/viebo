@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -120,7 +121,7 @@ const CreateEvent = () => {
         ...formData,
         maxAttendees: formData.maxAttendees ? parseInt(formData.maxAttendees) : null
       };
-      const res = await axios.post('http://localhost:5000/api/events/create', submitData);
+      const res = await axios.post(`${API_URL}/events/create`, submitData);
       setCreatedEvent(res.data);
     } catch (err) {
       console.error('Create event submission error:', err);

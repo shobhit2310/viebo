@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -42,7 +43,7 @@ const JoinEvent = () => {
 
     try {
       const position = await getCurrentPosition();
-      const res = await axios.post('http://localhost:5000/api/events/join', {
+      const res = await axios.post(`${API_URL}/events/join`, {
         code: code.toUpperCase(),
         userLatitude: position.latitude,
         userLongitude: position.longitude

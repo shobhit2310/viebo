@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { User, Mail, Calendar, Save, Sparkles, Heart } from 'lucide-react';
@@ -53,7 +54,7 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      const res = await axios.put('http://localhost:5000/api/auth/profile', formData);
+      const res = await axios.put(`${API_URL}/auth/profile`, formData);
       updateUser(res.data);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);

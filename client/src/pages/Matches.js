@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -15,7 +16,7 @@ const Matches = () => {
 
   const fetchMatches = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/matches/my-matches');
+      const res = await axios.get(`${API_URL}/matches/my-matches`);
       setMatches(res.data);
     } catch (err) {
       console.error('Failed to fetch matches:', err);

@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -56,9 +57,9 @@ const EventDetail = () => {
   const fetchEventData = async () => {
     try {
       const [eventRes, crushesRes, matchesRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/events/${id}`),
-        axios.get(`http://localhost:5000/api/matches/crushes/${id}`),
-        axios.get(`http://localhost:5000/api/matches/event/${id}`)
+        axios.get(`${API_URL}/events/${id}`),
+        axios.get(`${API_URL}/matches/crushes/${id}`),
+        axios.get(`${API_URL}/matches/event/${id}`)
       ]);
       setEvent(eventRes.data);
       setCrushes(crushesRes.data);
@@ -76,7 +77,7 @@ const EventDetail = () => {
   const sendCrush = async (targetUserId) => {
     setSendingCrush(targetUserId);
     try {
-      const res = await axios.post('http://localhost:5000/api/matches/crush', {
+      const res = await axios.post(`${API_URL}/matches/crush`, {
         eventId: id,
         targetUserId
       });

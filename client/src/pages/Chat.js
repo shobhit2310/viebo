@@ -1,3 +1,4 @@
+import { API_URL } from "../config";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -93,8 +94,8 @@ const Chat = () => {
   const fetchChatData = async () => {
     try {
       const [matchRes, messagesRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/matches/my-matches'),
-        axios.get(`http://localhost:5000/api/chat/${matchId}`)
+        axios.get(`${API_URL}/matches/my-matches`),
+        axios.get(`${API_URL}/chat/${matchId}`)
       ]);
       
       const currentMatch = matchRes.data.find(m => m.id === matchId);
@@ -119,7 +120,7 @@ const Chat = () => {
   // Mark messages as read
   const markMessagesAsRead = useCallback(async () => {
     try {
-      await axios.post(`http://localhost:5000/api/chat/${matchId}/read`);
+      await axios.post(`${API_URL}/chat/${matchId}/read`);
     } catch (err) {
       console.error('Failed to mark messages as read:', err);
     }
@@ -160,7 +161,7 @@ const Chat = () => {
 
     setSending(true);
     try {
-      await axios.post('http://localhost:5000/api/chat/send', {
+      await axios.post(`${API_URL}/chat/send`, {
         matchId,
         content: newMessage.trim()
       });
@@ -201,7 +202,7 @@ const Chat = () => {
   // Handle photo send
   const handlePhotoSend = async (imageData) => {
     try {
-      await axios.post('http://localhost:5000/api/chat/send', {
+      await axios.post(`${API_URL}/chat/send`, {
         matchId,
         content: imageData,
         type: 'image'
@@ -215,7 +216,7 @@ const Chat = () => {
   // Handle voice message send
   const handleVoiceSend = async (audioData, duration) => {
     try {
-      await axios.post('http://localhost:5000/api/chat/send', {
+      await axios.post(`${API_URL}/chat/send`, {
         matchId,
         content: audioData,
         type: 'voice',
@@ -230,7 +231,7 @@ const Chat = () => {
   // Handle GIF send
   const handleGifSend = async (gifUrl) => {
     try {
-      await axios.post('http://localhost:5000/api/chat/send', {
+      await axios.post(`${API_URL}/chat/send`, {
         matchId,
         content: gifUrl,
         type: 'gif'
@@ -244,7 +245,7 @@ const Chat = () => {
   // Handle icebreaker question use - send directly
   const handleIcebreakerUse = async (question) => {
     try {
-      await axios.post('http://localhost:5000/api/chat/send', {
+      await axios.post(`${API_URL}/chat/send`, {
         matchId,
         content: question
       });
@@ -258,7 +259,7 @@ const Chat = () => {
   const handleDatePropose = (dateData) => {
     // Send system message about date proposal
     const proposalMessage = `📅 I'd love to plan a date! How about ${dateData.activity} at ${dateData.location} on ${dateData.date} at ${dateData.time}?`;
-    axios.post('http://localhost:5000/api/chat/send', {
+    axios.post(`${API_URL}/chat/send`, {
       matchId,
       content: proposalMessage
     });
