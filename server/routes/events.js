@@ -78,8 +78,9 @@ router.post('/create', authMiddleware, async (req, res) => {
     const parsedLat = toFiniteNumber(locationLat);
     const parsedLng = toFiniteNumber(locationLng);
 
-    if (!location || parsedLat === null || parsedLng === null) {
-      return res.status(400).json({ message: 'Please select an exact location from the map' });
+    // Enforce map selection ONLY for private events
+    if (!isPublic && (!location || parsedLat === null || parsedLng === null)) {
+      return res.status(400).json({ message: 'Please select an exact location from the map for private events' });
     }
     
     // Generate unique event code
@@ -196,7 +197,8 @@ router.post('/join', authMiddleware, async (req, res) => {
       return res.status(404).json({ message: 'Event not found' });
     }
 
-    if (event.location_latitude !== null && event.location_longitude !== null) {
+    // Enforce distance check only for private events
+    if (!event.is_public && event.location_latitude !== null && event.location_longitude !== null) {
       const parsedUserLat = toFiniteNumber(userLatitude);
       const parsedUserLng = toFiniteNumber(userLongitude);
 

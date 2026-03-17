@@ -109,7 +109,7 @@ const CreateEvent = () => {
     setError('');
 
 
-    if (formData.locationLat === null || formData.locationLng === null) {
+    if (!formData.isPublic && (formData.locationLat === null || formData.locationLng === null)) {
       setError('Please select a location on the map.');
       return;
     }
@@ -452,9 +452,10 @@ const CreateEvent = () => {
           <div style={{ marginBottom: '20px' }}>
             <label className="form-label">
               <MapPin size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-              Select Event Location (OpenStreetMap)
+              {formData.isPublic ? 'Event Location (Optional)' : 'Select Event Location (OpenStreetMap)'}
             </label>
-            <LocationPicker
+            {!formData.isPublic ? (
+              <LocationPicker
               position={formData.locationLat && formData.locationLng ? [formData.locationLat, formData.locationLng] : null}
               setPosition={(latlng) => handleLocationPick(latlng)}
             />
@@ -463,7 +464,18 @@ const CreateEvent = () => {
                 {locationSelectionError}
               </p>
             )}
-            {formData.location && (
+              </>
+            ) : (
+              <input
+                type="text"
+                name="location"
+                className="form-input"
+                placeholder="e.g., Club X, Central Park, or Online"
+                value={formData.location}
+                onChange={handleChange}
+              />
+            )}
+            {formData.location && !formData.isPublic && (
               <p style={{ marginTop: '8px', color: '#94a3b8', fontSize: '12px' }}>
                 {formData.location}
               </p>
