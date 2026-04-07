@@ -455,11 +455,12 @@ const CreateEvent = () => {
               {formData.isPublic ? 'Event Location (Optional)' : 'Select Event Location (OpenStreetMap)'}
             </label>
             {!formData.isPublic ? (
+              <>
               <LocationPicker
-              position={formData.locationLat && formData.locationLng ? [formData.locationLat, formData.locationLng] : null}
-              setPosition={(latlng) => handleLocationPick(latlng)}
-            />
-            {locationSelectionError && (
+                position={formData.locationLat && formData.locationLng ? [formData.locationLat, formData.locationLng] : null}
+                setPosition={(latlng) => handleLocationPick(latlng)}
+              />
+              {locationSelectionError && (
               <p style={{ marginTop: '8px', color: '#f59e0b', fontSize: '12px' }}>
                 {locationSelectionError}
               </p>
