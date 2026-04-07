@@ -255,17 +255,18 @@ body {
 
 /* Card Styles */
 .card {
-  background: rgba(30, 41, 59, 0.6);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(100, 116, 139, 0.2);
+  border: 1px solid rgba(219, 39, 119, 0.15);
   border-radius: 20px;
   padding: 24px;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 12px 30px rgba(236, 72, 153, 0.15);
   border-color: rgba(236, 72, 153, 0.3);
 }
 

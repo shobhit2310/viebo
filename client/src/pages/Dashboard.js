@@ -58,7 +58,7 @@ const Dashboard = () => {
           <h1 style={{ fontSize: '32px', marginBottom: '8px' }}>
             Hey, {user?.name}! 👋
           </h1>
-          <p style={{ color: '#94a3b8' }}>
+          <p style={{ color: '#64748b' }}>
             Ready to find your match at an event?
           </p>
         </div>
@@ -80,11 +80,11 @@ const Dashboard = () => {
             </div>
             <div>
               <h3 style={{ marginBottom: '4px' }}>Create Event</h3>
-              <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+              <p style={{ color: '#64748b', fontSize: '14px' }}>
                 Host a party, festival, or gathering
               </p>
             </div>
-            <ChevronRight size={24} color="#64748b" style={{ marginLeft: 'auto' }} />
+            <ChevronRight size={24} color="#475569" style={{ marginLeft: 'auto' }} />
           </div>
         </Link>
 
@@ -103,11 +103,11 @@ const Dashboard = () => {
             </div>
             <div>
               <h3 style={{ marginBottom: '4px' }}>Join Event</h3>
-              <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+              <p style={{ color: '#64748b', fontSize: '14px' }}>
                 Enter a code to join an event
               </p>
             </div>
-            <ChevronRight size={24} color="#64748b" style={{ marginLeft: 'auto' }} />
+            <ChevronRight size={24} color="#475569" style={{ marginLeft: 'auto' }} />
           </div>
         </Link>
 
@@ -126,11 +126,11 @@ const Dashboard = () => {
             </div>
             <div>
               <h3 style={{ marginBottom: '4px' }}>Discover Events</h3>
-              <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+              <p style={{ color: '#64748b', fontSize: '14px' }}>
                 Find public events near you
               </p>
             </div>
-            <ChevronRight size={24} color="#64748b" style={{ marginLeft: 'auto' }} />
+            <ChevronRight size={24} color="#475569" style={{ marginLeft: 'auto' }} />
           </div>
         </Link>
       </div>
@@ -207,7 +207,7 @@ const Dashboard = () => {
                   </span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', color: '#94a3b8', fontSize: '14px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', color: '#64748b', fontSize: '14px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Calendar size={16} />
                     <span>{formatDate(event.date)}</span>
